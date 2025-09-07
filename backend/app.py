@@ -16,6 +16,7 @@ from datetime import datetime
 sys.path.append(str(Path(__file__).parent.parent))
 from audio_extractor import AudioExtractor
 from subtitle_generator import SubtitleGenerator
+from subtitle_generator_assemblyai import SubtitleGeneratorAssemblyAI
 
 app = FastAPI(title="Video to Subtitle API")
 
@@ -71,6 +72,8 @@ class ProcessRequest(BaseModel):
     language: Optional[str] = None
     subtitle_format: str = "srt"
     translate_english: bool = False
+    use_assemblyai: bool = True
+    assemblyai_api_key: Optional[str] = None
 
 @app.websocket("/ws/{task_id}")
 async def websocket_endpoint(websocket: WebSocket, task_id: str):
@@ -122,7 +125,10 @@ async def process_video_task(task_id: str, video_path: Path, options: ProcessReq
         processing_status.update_task(task_id, progress=30, message="Generating subtitles...")
         await processing_status.send_update(task_id)
         
-        generator = SubtitleGenerator(model_size=options.model_size)
+        if options.use_assemblyai:
+            generator = SubtitleGeneratorAssemblyAI(api_key=options.assemblyai_api_key)
+        else:
+            generator = SubtitleGenerator(model_size=options.model_size)
         
         subtitle_path = generator.generate_subtitles(
             audio_path,

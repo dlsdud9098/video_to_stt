@@ -26,6 +26,8 @@ function App() {
   const [language, setLanguage] = useState('');
   const [subtitleFormat, setSubtitleFormat] = useState('srt');
   const [translateEnglish, setTranslateEnglish] = useState(false);
+  const [useAssemblyAI, setUseAssemblyAI] = useState(true);
+  const [assemblyAIKey, setAssemblyAIKey] = useState('');
   const [ws, setWs] = useState<WebSocket | null>(null);
 
   useEffect(() => {
@@ -100,6 +102,8 @@ function App() {
         language: language || null,
         subtitle_format: subtitleFormat,
         translate_english: translateEnglish,
+        use_assemblyai: useAssemblyAI,
+        assemblyai_api_key: assemblyAIKey || null,
       });
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -163,24 +167,54 @@ function App() {
 
               {selectedFile && (
                 <div className="mt-8 space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                        <CogIcon className="w-4 h-4 mr-1" />
-                        Model Size
+                  <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-4">
+                    <div className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        id="useAssemblyAI"
+                        checked={useAssemblyAI}
+                        onChange={(e) => setUseAssemblyAI(e.target.checked)}
+                        className="mr-2"
+                      />
+                      <label htmlFor="useAssemblyAI" className="text-sm font-medium text-gray-700">
+                        Use AssemblyAI Universal-2 Model (Recommended)
                       </label>
-                      <select
-                        value={modelSize}
-                        onChange={(e) => setModelSize(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      >
-                        <option value="tiny">Tiny (Fastest)</option>
-                        <option value="base">Base (Balanced)</option>
-                        <option value="small">Small</option>
-                        <option value="medium">Medium</option>
-                        <option value="large">Large (Most Accurate)</option>
-                      </select>
                     </div>
+                    {useAssemblyAI && (
+                      <div className="mt-2">
+                        <input
+                          type="password"
+                          value={assemblyAIKey}
+                          onChange={(e) => setAssemblyAIKey(e.target.value)}
+                          placeholder="AssemblyAI API Key (optional if set in server)"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Get your API key from <a href="https://www.assemblyai.com/dashboard/" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">AssemblyAI Dashboard</a>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {!useAssemblyAI && (
+                      <div>
+                        <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                          <CogIcon className="w-4 h-4 mr-1" />
+                          Whisper Model Size
+                        </label>
+                        <select
+                          value={modelSize}
+                          onChange={(e) => setModelSize(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        >
+                          <option value="tiny">Tiny (Fastest)</option>
+                          <option value="base">Base (Balanced)</option>
+                          <option value="small">Small</option>
+                          <option value="medium">Medium</option>
+                          <option value="large">Large (Most Accurate)</option>
+                        </select>
+                      </div>
+                    )}
 
                     <div>
                       <label className="flex items-center text-sm font-medium text-gray-700 mb-2">

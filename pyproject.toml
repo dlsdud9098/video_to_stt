@@ -21,6 +21,7 @@ dependencies = [
     "pillow>=10.0.0",
     "numpy>=1.24.0",
     "python-dotenv>=1.1.1",
+    "assemblyai>=0.43.1",
 ]
 
 [tool.uv]

@@ -1,14 +1,19 @@
-# YouTube Video to Text Converter & Dataset Creator
+# Video to STT (Speech-to-Text) Converter
 
-YouTube 영상을 다운로드하고 음성을 텍스트로 변환하며, 댓글과 함께 데이터셋을 생성하는 종합 도구입니다.
+영상 파일을 AI 기반 음성 인식을 사용하여 자막으로 변환하는 웹 애플리케이션입니다.
 
 ## 🚀 주요 기능
 
 ### 1. 기본 기능
-- **YouTube 영상 다운로드**: YouTube URL에서 영상 자동 다운로드
-- **음성 추출**: 영상에서 음성 트랙 분리
-- **고정확도 음성-텍스트 변환**: OpenAI Whisper 모델 사용 (large-v3 기본)
-- **다양한 출력 형식**: TXT, SRT (자막), JSON 지원
+- **다중 AI 모델 지원**: Whisper와 AssemblyAI Universal-2 모델 선택 가능
+- **실시간 진행 상황 추적**: WebSocket 기반 실시간 프로세싱 상태 확인
+- **다양한 출력 형식**: SRT, JSON, 일반 텍스트로 자막 내보내기
+- **번역 기능**: 영어가 아닌 콘텐츠를 영어로 번역하는 옵션
+- **모던 UI**: React 기반 프론트엔드와 Tailwind CSS
+
+### 2. AI 모델 옵션
+- **AssemblyAI Universal-2 (권장)**: 최신 음성 인식 모델, 자동 언어 감지
+- **OpenAI Whisper**: 로컬에서 실행되는 오픈소스 모델 (tiny ~ large-v3)
 
 ### 2. 데이터셋 생성 기능 (NEW!)
 - **영상 종합 분석**: 메타데이터, 음성, OCR 텍스트 통합 분석
