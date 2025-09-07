@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import axios from 'axios';
 import { CloudArrowUpIcon, DocumentTextIcon, LanguageIcon, CogIcon } from '@heroicons/react/24/outline';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
@@ -17,7 +17,11 @@ interface ProcessingTask {
   error?: string;
 }
 
+// Lazy load components
+const DatasetCreator = lazy(() => import('./DatasetCreator'));
+
 function App() {
+  const [activeTab, setActiveTab] = useState<'subtitle' | 'dataset'>('subtitle');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [taskId, setTaskId] = useState<string | null>(null);
@@ -129,13 +133,40 @@ function App() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-gray-800 mb-2 text-center">
-            Video to Subtitle Converter
+            Video Processing Suite
           </h1>
           <p className="text-gray-600 text-center mb-8">
-            Upload a video and get subtitles using AI-powered speech recognition
+            Convert videos to subtitles or create AI training datasets
           </p>
 
-          {!taskId ? (
+          {/* Tab Switcher */}
+          <div className="flex justify-center mb-8">
+            <div className="bg-white rounded-lg shadow-md p-1 inline-flex">
+              <button
+                onClick={() => setActiveTab('subtitle')}
+                className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                  activeTab === 'subtitle'
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Subtitle Generator
+              </button>
+              <button
+                onClick={() => setActiveTab('dataset')}
+                className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                  activeTab === 'dataset'
+                    ? 'bg-purple-600 text-white'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Dataset Creator
+              </button>
+            </div>
+          </div>
+
+          {activeTab === 'subtitle' ? (
+            !taskId ? (
             <div className="bg-white rounded-lg shadow-xl p-8">
               <div
                 onDragOver={handleDragOver}
@@ -269,8 +300,8 @@ function App() {
                 </div>
               )}
             </div>
-          ) : (
-            <div className="bg-white rounded-lg shadow-xl p-8">
+            ) : (
+              <div className="bg-white rounded-lg shadow-xl p-8">
               <div className="space-y-6">
                 {task && (
                   <>
@@ -343,6 +374,15 @@ function App() {
                 )}
               </div>
             </div>
+          )
+          ) : (
+            <Suspense fallback={
+              <div className="bg-white rounded-lg shadow-xl p-8">
+                <div className="text-center">Loading...</div>
+              </div>
+            }>
+              <DatasetCreator />
+            </Suspense>
           )}
         </div>
       </div>
