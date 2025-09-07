@@ -10,6 +10,10 @@ import os
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from datetime import datetime
+from dotenv import load_dotenv
+
+# .env 파일 로드
+load_dotenv()
 
 # 커스텀 모듈
 from youtube_analyzer import YouTubeAnalyzer

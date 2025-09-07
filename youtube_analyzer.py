@@ -18,6 +18,10 @@ from pytube import YouTube
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import os
+from dotenv import load_dotenv
+
+# .env 파일 로드
+load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO,
