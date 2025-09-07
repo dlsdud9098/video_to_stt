@@ -22,6 +22,7 @@ dependencies = [
     "numpy>=1.24.0",
     "python-dotenv>=1.1.1",
     "assemblyai>=0.43.1",
+    "yt-dlp>=2025.9.5",
 ]
 
 [tool.uv]

@@ -16,9 +16,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # 커스텀 모듈
-from youtube_analyzer import YouTubeAnalyzer
+from youtube_analyzer_ytdlp import YouTubeAnalyzer
 from video_frame_analyzer import AdvancedVideoAnalyzer
-from video_downloader import VideoDownloader
+from video_downloader_ytdlp import VideoDownloader
 from audio_extractor import AudioExtractor
 from subtitle_generator import SubtitleGenerator
 

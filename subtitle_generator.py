@@ -59,15 +59,7 @@ class SubtitleGenerator:
             "fp16": self.device == "cuda",
             "condition_on_previous_text": True,
             "initial_prompt": None,
-            "word_timestamps": True,
-            "vad_filter": True,
-            "vad_parameters": {
-                "threshold": 0.6,
-                "min_speech_duration_ms": 250,
-                "max_speech_duration_s": float('inf'),
-                "min_silence_duration_ms": 2000,
-                "speech_pad_ms": 400
-            }
+            "word_timestamps": True
         }
         
         result = self.model.transcribe(str(audio_path), **options)
