@@ -50,10 +50,13 @@ class YouTubeAnalyzer:
     
     def extract_video_id(self, url: str) -> Optional[str]:
         """YouTube URL에서 비디오 ID 추출"""
+        # URL 파라미터 제거
+        url = url.split('?')[0] if '?' in url else url
+        
         patterns = [
             r'youtube\.com/watch\?v=([^&]+)',
             r'youtu\.be/([^?]+)',
-            r'youtube\.com/shorts/([^?]+)',
+            r'youtube\.com/shorts/([^?/]+)',
             r'youtube\.com/embed/([^?]+)'
         ]
         
@@ -66,6 +69,11 @@ class YouTubeAnalyzer:
     def get_video_metadata(self, url: str) -> Dict[str, Any]:
         """영상 메타데이터 수집"""
         try:
+            # Shorts URL을 일반 watch URL로 변환
+            video_id = self.extract_video_id(url)
+            if video_id and 'shorts' in url:
+                url = f'https://www.youtube.com/watch?v={video_id}'
+            
             yt = YouTube(url)
             
             metadata = {

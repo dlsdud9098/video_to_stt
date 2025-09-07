@@ -1,4 +1,5 @@
 import os
+import re
 from pytube import YouTube
 from pytube.exceptions import VideoUnavailable, PytubeError
 from typing import Optional
@@ -14,8 +15,30 @@ class VideoDownloader:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
     
+    def _extract_video_id(self, url: str) -> Optional[str]:
+        """YouTube URL에서 비디오 ID 추출"""
+        patterns = [
+            r'youtube\.com/watch\?v=([^&]+)',
+            r'youtu\.be/([^?]+)',
+            r'youtube\.com/shorts/([^?/]+)',
+            r'youtube\.com/embed/([^?]+)'
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, url.split('?')[0] if '?' in url else url)
+            if match:
+                return match.group(1)
+        return None
+    
     def download_video(self, url: str, quality: str = "highest") -> Optional[Path]:
         try:
+            # Shorts URL을 일반 watch URL로 변환
+            if 'shorts' in url:
+                video_id = self._extract_video_id(url)
+                if video_id:
+                    url = f'https://www.youtube.com/watch?v={video_id}'
+                    logger.info(f"Converted shorts URL to: {url}")
+            
             logger.info(f"Starting download for: {url}")
             yt = YouTube(url)
             
